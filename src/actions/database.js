@@ -42,7 +42,7 @@ new FamilyMember("Robinson Gatonye","John Kirima Macharia","Peninah Wanjiru",nul
 new FamilyMember("Nelson Mwangi Kirima","John Kirima Macharia","Peninah Wanjiru",null),
 new FamilyMember("Ben Magira","John Kamithi","Rachel Wangeci",null),
 new FamilyMember("Elizabeth Wanjiku","John Kamithi","Rachel Wangeci",null),
-new FamilyMember("Macharia","John Kamithi","Rachel Wangeci",null),
+new FamilyMember("Macharia Kamithi","John Kamithi","Rachel Wangeci",null),
 new FamilyMember("Githinji","John Kamithi","Rachel Wangeci",null),
 new FamilyMember("Mwangi","John Kamithi","Rachel Wangeci",null),
 new FamilyMember("Maina","John Kamithi","Rachel Wangeci",null),

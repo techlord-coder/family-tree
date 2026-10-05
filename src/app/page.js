@@ -10,6 +10,29 @@ import {fetchUnions} from '../actions/database.js';
 
 const elk = new ELK();
 
+function checkOutsider(familyMembers,memberId){
+if (memberId===null){
+    return true;
+}
+const member=familyMembers.find(member=>member.id===memberId);
+if(member.name=="Titus Macharia Wanyiri"){
+        return false;
+    }
+
+if(member.father_id===null && member.mother_id===null){
+
+    return true;
+
+}
+
+else{
+
+    return false;
+
+}
+
+}
+
 export default function Home(){
     // 1. Establish constant dimensional bounds for your family member node cards
 const NODE_WIDTH = 150;
@@ -23,6 +46,7 @@ const [unions, setUnions] = useState([]);
 useEffect(() => {
     const fetchData = async () => {
         try {
+            await SeedDatabase(); // Seed the database with family members and unions
             // Fetch family members and unions from the database
             const familyMembers = await fetchFamilyMembers();
             const unions = await fetchUnions();
@@ -41,26 +65,37 @@ const childNodes=familyMembers.map(member => ({
 }));
 
 
-console.log('Child Nodes after adding rowLevels:', childNodes);
+
 // 3. Assemble all your relationships (Parents AND Spouses) into a combined ELK Edge Array
 const combinedEdges = [];
-
+let numberOfEdges=0;
 //Create edges for parent-child relationships
 familyMembers.forEach(member => {
-    if (member.father_id) {
+    const isFatherOutsider = checkOutsider(familyMembers, member.father_id);
+    const isMotherOutsider = checkOutsider(familyMembers, member.mother_id);
+
+    if (member.father_id && !isFatherOutsider) {
+const father=familyMembers.find(father => father.id === member.father_id);
+console.log(`${father.name} is the father of ${member.name}`);
         combinedEdges.push({
             id: `edge-${member.father_id}-${member.id}`,
             source: member.father_id,
             target: member.id
         });
+        numberOfEdges++;
+        console.log(`Added edge from ${father.name} to ${member.name}. Total edges: ${numberOfEdges}`);
     }
 
-    if (member.mother_id) {
+    if (member.mother_id && !isMotherOutsider) {
+        const mother=familyMembers.find(mother => mother.id === member.mother_id);
+        console.log(`${mother.name} is the mother of ${member.name}`);
         combinedEdges.push({
             id: `edge-${member.mother_id}-${member.id}`,
             source: member.mother_id,
             target: member.id
         });
+        numberOfEdges++;
+        console.log(`Added edge from ${mother.name} to ${member.name}. Total edges: ${numberOfEdges}`);
     }
 });
 console.log('Combined Edges:', combinedEdges);
@@ -106,8 +141,10 @@ createLayout();
 const reactFlowEdges=[];
 const createEdges = () => {
 familyMembers.forEach(member => {
+const isFatherOutsider = checkOutsider(familyMembers, member.father_id);
+const isMotherOutsider = checkOutsider(familyMembers, member.mother_id);
 
-if(member.father_id) {
+if(member.father_id && !isFatherOutsider) {
 reactFlowEdges.push({
     id:`edge-${member.father_id}-${member.id}`,
     source:member.father_id,
@@ -115,7 +152,7 @@ reactFlowEdges.push({
 })      
 }
 
-if(member.mother_id) {
+if(member.mother_id && !isMotherOutsider) {
 reactFlowEdges.push({
     id:`edge-${member.mother_id}-${member.id}`,
     source:member.mother_id,
