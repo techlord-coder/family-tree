@@ -21,7 +21,25 @@ class FamilyMember {
 }
 
 const familyMembers = [
-new FamilyMember("Titus Macharia Wanyiri",null,null,"Joyce Nyambura"),
+new FamilyMember("Titus, Njoki & Macharia Family",null,null,null),
+new FamilyMember("Titus Macharia Wanyiri","Titus, Njoki & Macharia Family",null,"Joyce Nyambura"),
+new FamilyMember("Esther Njoki","Titus, Njoki & Macharia Family",null,null),
+new FamilyMember("John Kamau",null,"Esther Njoki",null),
+new FamilyMember("Jane Wanjiru",null,"Esther Njoki","Riungu"),
+new FamilyMember("Maina",null,"Esther Njoki","Margaret"),
+new FamilyMember("Joseph Kanyuga","John Kamau",null,null),
+new FamilyMember("Mark Ngugi","John Kamau",null,null),
+new FamilyMember("Ngina","John Kamau",null,null),
+new FamilyMember("Erick","Riungu","Jane Wanjiru",null),
+new FamilyMember("Kanyuga","Maina","Margaret",null),
+new FamilyMember("Thamaini","Maina","Margaret",null),
+new FamilyMember("Mwangi Wanjeri",null,"Mercy Wanjeri",null),
+new FamilyMember("Kirima",null,"Mercy Wanjeri",null),
+new FamilyMember("Kanyi",null,"Mercy Wanjeri","Nduta"),
+new FamilyMember("Wangechi",null,"Mercy Wanjeri","Gachie"),
+new FamilyMember("Agnes Wanjiru","Kirima",null,null),
+new FamilyMember("Kariuki",null,"Agnes Wanjiru",null),
+new FamilyMember("Mercy Wanjeri","Titus, Njoki & Macharia Family",null,null),
 new FamilyMember("Nelson Mwangi Macharia","Titus Macharia Wanyiri","Joyce Nyambura","Eunice Wambui"),
 new FamilyMember("Rachel Wangeci","Titus Macharia Wanyiri","Joyce Nyambura","John Kamithi"),
 new FamilyMember("John Kirima Macharia","Titus Macharia Wanyiri","Joyce Nyambura","Peninah Wanjiru"),
@@ -88,6 +106,10 @@ new FamilyMember("Kamau",null,null,"Grace Wanjiku"),
 new FamilyMember("Ndirangu",null,null,"Josphine Njoki"),
 new FamilyMember("Anne Njeri",null,null,"Obadiah Kariuki"),
 new FamilyMember("Mugo",null,null,"Joyce Nyambura Kimani"),
+new FamilyMember("Riungu",null,null,"Jane Wanjiru"),
+new FamilyMember("Margaret",null,null,"Maina"),
+new FamilyMember("Nduta",null,null,"Kanyi"),
+new FamilyMember("Gachie",null,null,"Wangechi"),
 ];
 let patnerIdArrays=[];
 export async function SeedDatabase(){
