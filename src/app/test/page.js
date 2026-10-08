@@ -1,9 +1,13 @@
 'use client'
 import ELK from 'elkjs';
 
-import { ReactFlow, Background, Controls, Node, Edge,getSmoothStepPath, BaseEdge } from '@xyflow/react';
+import { ReactFlow, Background, Controls, Node, Edge,getSmoothStepPath, BaseEdge,Handle,Position} from '@xyflow/react';
 import {useState,useEffect} from 'react';
 import '@xyflow/react/dist/style.css';
+import { CustomContainer}  from '../components/customContainer.jsx';
+const nodeTypes = {
+    customBox: CustomContainer,
+  };
 
 const elk = new ELK();
 
@@ -67,9 +71,19 @@ async function calculateLayout(){
         if(isGroup){
 newNodes.push({
 id:node.id,
-type:'group',
+type:'customBox',
 position:{x:node.x, y:node.y},
-data:{label:node.id},
+data:{
+    
+    label:(
+        <>
+    <Handle type="target" position={Position.Top} id="group-top" />
+
+    <Handle type="source" position={Position.Bottom} id="group-bottom" />
+        </>
+    )
+
+},
 style:{backgroundColor:'#f0f0f0', border:'1px solid #000', padding:'10px',width:node.width, height:node.height},
 
 });
@@ -117,7 +131,7 @@ newEdges.push({
 });
 
 const testEdges=[
-    { id: 'e1', source: '1', target: '3', type: 'smoothstep' },
+    { id: 'e1', source: '1', target: '2', type: 'smoothstep' },
     { id: 'e2', source: '2', target: '3', type: 'smoothstep' },
     { id: 'e3', source: '3', target: '4', type: 'smoothstep' }
 ];
@@ -150,19 +164,33 @@ const trialNodes=[
 
 const trialEdges=[
     // 1. Connect Node 1 down to the first inner node (2)
-  { id: 'e1', source: '1', target: '2', type: 'smoothstep' },
+  { id: 'e1', 
+    source: '1',
+     target: 'horizontal-cluster-1',
+   targetHandle: 'group-top',     // Connect to the top handle of the group 
+    type: 'smoothstep' 
+    },
   
   // 2. Connect Node 2 to Node 3 horizontally inside the box
-  { id: 'e2', source: '2', target: '3', type: 'smoothstep' },
+  { id: 'e2', 
+    source: '2', 
+    target: '3', 
+    type: 'smoothstep' 
+},
   
   // 3. Connect the last inner node (3) down to Node 4 outside
-  { id: 'e3', source: '3', target: '4', type: 'smoothstep' }
+  { id: 'e3', 
+    source: 'horizontal-cluster-1',
+    sourceHandle: 'group-bottom',  // Connect to the bottom handle of the group 
+    target: '4', 
+    type: 'smoothstep' 
+}
 ];
     return (
         <div className="w-full h-screen text-black">
         <h1>Test Page</h1>
         <p>This is a test page for the family tree application.</p>
-<ReactFlow nodes={nodes} edges={edges} fitView>
+<ReactFlow nodes={nodes} edges={trialEdges} nodeTypes={nodeTypes} fitView>
 <Background />
 <Controls />
 </ReactFlow>

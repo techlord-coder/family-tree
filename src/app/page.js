@@ -7,6 +7,7 @@ import '@xyflow/react/dist/base.css';
 import {SeedDatabase} from '../actions/database.js'
 import fetchFamilyMembers from '../actions/database.js';
 import {fetchUnions} from '../actions/database.js';
+import {CustomContainer} from './components/customContainer.jsx';
 
 const elk = new ELK();
 
@@ -42,6 +43,9 @@ else{
     return {foundSpouse:false, spouseId:null};
 }
 }
+const nodeTypes = {
+    customBox: CustomContainer,
+  };
 export default function Home(){
     // 1. Establish constant dimensional bounds for your family member node cards
 const NODE_WIDTH = 150;
@@ -207,7 +211,7 @@ layoutedGraph.children.forEach((node) => {
     if(node.children && node.children.length>0){
 reactFlowNodes.push({
     id:node.id,
-    type:'group',
+    type:'customBox',
     position:{x:node.x, y:node.y},
     data:{label:node.id},
     style:{backgroundColor:'#f0f0f0', border:'1px solid #000', padding:'10px',width:node.width, height:node.height},
@@ -248,18 +252,27 @@ const isFatherOutsider = checkOutsider(familyMembers, member.father_id);
 const isMotherOutsider = checkOutsider(familyMembers, member.mother_id);
 
 if(member.father_id && !isFatherOutsider) {
+let isSubgraphFather=checkSpouse(unions,member.father_id);
+let isSubgraphChild=checkSpouse(unions, member.id);
+let sourceId=isSubgraphFather.foundSpouse ? `${member.father_id}-${isSubgraphFather.spouseId}` : member.father_id;
+let targetId=isSubgraphChild.foundSpouse ? `${member.id}-${isSubgraphChild.spouseId}` : member.id;
+
 reactFlowEdges.push({
     id:`edge-${member.father_id}-${member.id}`,
-    source:member.father_id,
-    target:member.id
+    source:sourceId,
+    target:targetId
 })      
 }
 
 if(member.mother_id && !isMotherOutsider) {
+let isSubgraphMother=checkSpouse(unions, member.mother_id);
+let isSubgraphChild=checkSpouse(unions, member.id);
+let sourceId=isSubgraphMother.foundSpouse ? `${member.mother_id}-${isSubgraphMother.spouseId}` : member.mother_id;
+let targetId=isSubgraphChild.foundSpouse ? `${member.id}-${isSubgraphChild.spouseId}` : member.id;
 reactFlowEdges.push({
     id:`edge-${member.mother_id}-${member.id}`,
-    source:member.mother_id,
-    target:member.id
+    source:sourceId,
+    target:targetId
 });  
 }    
 });
@@ -292,7 +305,7 @@ createEdges();
 }, []); 
 return (
     <div className="w-full h-screen bg-cream text-black">
-<ReactFlow nodes={nodes} edges={edges} fitView>
+<ReactFlow nodes={nodes} edges={edges}  nodeTypes={nodeTypes} fitView>
 <Background gap={16}/>
 <Controls />
 
